@@ -1,3 +1,4 @@
+# .readthedocs.yml
 version: 2
 
 # Set the version of Python and other tools you might need
@@ -6,7 +7,8 @@ build:
   tools:
     python: "3.11"
   commands:
-    # cf. https://docs.readthedocs.io/en/stable/build-customization.html#install-dependencies-with-uv
+    # 1. Install dependencies and build custom extensions
+    # Retaining your uv/asdf configuration for environment setup
     - asdf plugin add uv
     - asdf install uv latest
     - asdf global uv latest
@@ -14,17 +16,29 @@ build:
     - uv pip install -r docs/requirements-docs.txt
     - uv pip install setuptools cython
     - .venv/bin/python setup.py build_ext --inplace
-    # Build HTML documentation (kept from original)
+    
+    # 2. Build the HTML documentation
     - >-
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
-    # Build LaTeX documentation (necessary for PDF output)
+      
+    # 3. Build the LaTeX source files (required input for PDF)
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/latex
 
-# Specify the output formats as a YAML list
+    # 4. Compile the PDF from LaTeX and move it to the final destination
+    # This block executes the LaTeX compiler to create the PDF file.
+    - cd $READTHEDOCS_OUTPUT/latex
+    - make all-pdf
+    
+    # Move and rename the final PDF file to the location expected by RTD
+    # The final PDF must be placed in $READTHEDOCS_OUTPUT/pdf/ and named $READTHEDOCS_PROJECT.pdf
+    - mkdir -p $READTHEDOCS_OUTPUT/pdf/
+    - mv *.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
+
+# Specify the final output formats you want Read the Docs to make available
 formats:
-  - htmlzip # Read the Docs default for HTML downloads
-  - pdf       # Request PDF output
-  - epub      # Optional: Request EPUB output (ebook format)
+  - htmlzip
+  - pdf
+  - epub
