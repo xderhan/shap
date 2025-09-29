@@ -30,13 +30,13 @@ sys.path.insert(0, os.path.abspath(".."))
 # pick them up properly.
 NOTEBOOKS_DIR = os.path.abspath("example_notebooks")
 if os.path.exists(NOTEBOOKS_DIR):
-    import warnings
+    import warnings
 
-    warnings.warn("example_notebooks directory exists, replacing...")
-    shutil.rmtree(NOTEBOOKS_DIR)
+    warnings.warn("example_notebooks directory exists, replacing...")
+    shutil.rmtree(NOTEBOOKS_DIR)
 shutil.copytree(os.path.abspath("../notebooks"), NOTEBOOKS_DIR)
 if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
-    shutil.rmtree(NOTEBOOKS_DIR + "/local_scratch")
+    shutil.rmtree(NOTEBOOKS_DIR + "/local_scratch")
 
 
 # -- General configuration ------------------------------------------------
@@ -49,15 +49,15 @@ if os.path.exists(NOTEBOOKS_DIR + "/local_scratch"):
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosectionlabel",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.intersphinx",
-    "sphinx_rtd_theme",
-    "numpydoc",
-    "nbsphinx",  # Allows parsing Jupyter notebooks
-    "myst_parser",  # Allows parsing Markdown, such as CONTRIBUTING.md
-    "sphinx_github_changelog",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx_rtd_theme",
+    "numpydoc",
+    "nbsphinx",  # Allows parsing Jupyter notebooks
+    "myst_parser",  # Allows parsing Markdown, such as CONTRIBUTING.md
+    "sphinx_github_changelog",
 ]
 
 # --- Extension options
@@ -73,16 +73,16 @@ autosummary_generate = True
 
 # [intersphinx]
 intersphinx_mapping = {
-    # "stdlib": ("https://docs.python.org/3", None),
-    "mpl": (
-        "https://matplotlib.org/stable/",
-        "https://matplotlib.org/stable/objects.inv",
-    ),
-    "scikit-learn": (
-        "https://scikit-learn.org/stable/",
-        "https://scikit-learn.org/stable/objects.inv",
-    ),
-    "scipy": ("https://docs.scipy.org/doc/scipy", None),
+    # "stdlib": ("https://docs.python.org/3", None),
+    "mpl": (
+        "https://matplotlib.org/stable/",
+        "https://matplotlib.org/stable/objects.inv",
+    ),
+    "scikit-learn": (
+        "https://scikit-learn.org/stable/",
+        "https://scikit-learn.org/stable/objects.inv",
+    ),
+    "scipy": ("https://docs.scipy.org/doc/scipy", None),
 }
 
 # Sphinx defaults to automatically resolve *unresolved* labels using all your Intersphinx mappings.
@@ -149,12 +149,12 @@ language = "en"
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = [
-    "_build",
-    "Thumbs.db",
-    ".DS_Store",
-    "example_notebooks/tabular_examples/tree_based_models/tree_shap_paper",
-    "user_studies",
-    "local",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "example_notebooks/tabular_examples/tree_based_models/tree_shap_paper",
+    "user_studies",
+    "local",
 ]
 
 # The reST default role (used for this markup: `text`) to use for all
@@ -194,11 +194,11 @@ todo_include_todos = False
 
 
 def get_latest_tag() -> str:
-    """Query GitHub API to get the most recent git tag"""
-    url = "https://api.github.com/repos/shap/shap/releases/latest"
-    response = requests.get(url)
-    response.raise_for_status()
-    return response.json()["tag_name"]
+    """Query GitHub API to get the most recent git tag"""
+    url = "https://api.github.com/repos/shap/shap/releases/latest"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()["tag_name"]
 
 
 _latest_tag = get_latest_tag()
@@ -212,29 +212,29 @@ rst_epilog = f"""
 
 # -- Options for HTML output ----------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
+# further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    #'canonical_url': '',
-    "logo_only": True,
-    "display_version": True,
-    "prev_next_buttons_location": "bottom",
-    "style_external_links": False,
-    "style_nav_header_background": "#343131",
-    # Toc options
-    "collapse_navigation": True,
-    "sticky_navigation": True,
-    "navigation_depth": 4,
-    "includehidden": True,
-    "titles_only": False,
+    #'canonical_url': '',
+    "logo_only": True,
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": False,
+    "style_nav_header_background": "#343131",
+    # Toc options
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 4,
+    "includehidden": True,
+    "titles_only": False,
 }
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -248,12 +248,12 @@ html_logo = "artwork/shap_logo_white.png"
 #
 # html_title = 'SHAP v0.16'
 
-# A shorter title for the navigation bar.  Default is the same as html_title.
+# A shorter title for the navigation bar.  Default is the same as html_title.
 #
 # html_short_title = None
 
 # The name of an image file (relative to this directory) to use as a favicon of
-# the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
 #
 html_favicon = "artwork/favicon.ico"
@@ -314,7 +314,7 @@ html_static_path = ["_static"]
 # html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
-# contain a <link> tag referring to it.  The value of this option must be the
+# contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
 #
 # html_use_opensearch = ''
@@ -324,8 +324,8 @@ html_static_path = ["_static"]
 
 # Language to be used for generating the HTML full-text search index.
 # Sphinx supports the following languages:
-#   'da', 'de', 'en', 'es', 'fi', 'fr', 'h', 'it', 'ja'
-#   'nl', 'no', 'pt', 'ro', 'r', 'sv', 'tr', 'zh'
+#   'da', 'de', 'en', 'es', 'fi', 'fr', 'h', 'it', 'ja'
+#   'nl', 'no', 'pt', 'ro', 'r', 'sv', 'tr', 'zh'
 #
 # html_search_language = 'en'
 
@@ -345,26 +345,33 @@ htmlhelp_basename = "SHAPdoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
+# *** ADDED FOR PDF GENERATION ***
+# Use xelatex for better Unicode support. This prevents many common PDF build failures.
+latex_engine = 'xelatex'
+
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
+    # The paper size ('letterpaper' or 'a4paper').
+    'papersize': 'a4paper',
+    #
+    # The font size ('10pt', '11pt' or '12pt').
+    'pointsize': '10pt',
+    #
+    # Additional stuff for the LaTeX preamble.
+    # Added optional preamble for better font aesthetics with xelatex
+    'preamble': r'''
+\usepackage{charter}
+\usepackage[defaultsans]{lato}
+\usepackage{inconsolata}
+''',
+    # Latex figure (float) alignment
+    'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
+#  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "SHAP.tex", "SHAP Documentation", "Scott Lundberg", "manual"),
+    (master_doc, "SHAP.tex", "SHAP Documentation", "Scott Lundberg", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -415,17 +422,17 @@ man_pages = [(master_doc, "shap", "SHAP Documentation", [author], 1)]
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
-#  dir menu entry, description, category)
+#  dir menu entry, description, category)
 texinfo_documents = [
-    (
-        master_doc,
-        "SHAP",
-        "SHAP Documentation",
-        author,
-        "SHAP",
-        "One line description of project.",
-        "Miscellaneous",
-    ),
+    (
+        master_doc,
+        "SHAP",
+        "SHAP Documentation",
+        author,
+        "SHAP",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -446,10 +453,10 @@ texinfo_documents = [
 
 
 def setup(app):
-    import shap  # noqa: F401
+    import shap  # noqa: F401
 
-    app.connect("build-finished", build_finished)
+    app.connect("build-finished", build_finished)
 
 
 def build_finished(app, exception):
-    shutil.rmtree(NOTEBOOKS_DIR)
+    shutil.rmtree(NOTEBOOKS_DIR)
