@@ -18,30 +18,13 @@ build:
     - >-
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
-    # Build LaTeX documentation
+    # Build LaTeX documentation (necessary for PDF output)
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/latex
 
-# Specify the output formats, including pdf
+# Specify the output formats as a YAML list
 formats:
-  - html
-  - pdf
-  # latex is also built but pdf is usually the desired output for users
-
-# If you only build latex, Read the Docs will automatically compile it to PDF.
-# Since you have custom commands, it's safer to ensure all dependencies for PDF
-# generation are available, which Read the Docs handles for the 'pdf' format.
-# When using custom commands, Read the Docs looks for a file named
-# <project>.pdf inside $READTHEDOCS_OUTPUT/pdf/ (or similar) but usually
-# handles the final step if 'latex' is built into $READTHEDOCS_OUTPUT/latex.
-# The default build process for PDF is:
-# 1. Build LaTeX: sphinx -b latex ... $READTHEDOCS_OUTPUT/latex
-# 2. Compile PDF: cd $READTHEDOCS_OUTPUT/latex && make all-pdf
-#
-# By specifying 'formats: [..., pdf]' and building the 'latex' format,
-# Read the Docs should take care of the final PDF compilation step.
-# If you must control the compilation, you could add:
-# - cd $READTHEDOCS_OUTPUT/latex
-# - make all-pdf
-# but relying on the 'formats' option is the standard, simpler way.
+  - htmlzip # Read the Docs default for HTML downloads
+  - pdf       # Request PDF output
+  - epub      # Optional: Request EPUB output (ebook format)
