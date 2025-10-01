@@ -5,7 +5,7 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.11"
-  # Install Inkscape to process SVG graphics for LaTeX
+  # System package to handle SVG conversion for LaTeX
   apt_packages:
     - inkscape
     
@@ -19,30 +19,40 @@ build:
     - uv pip install setuptools cython
     - .venv/bin/python setup.py build_ext --inplace
     
-    # 2. Build the HTML documentation (Output in $READTHEDOCS_OUTPUT/html)
+    # --- BUILD STEPS ---
+    
+    # 2. Build the HTML documentation
+    # This must be run first to ensure all dependencies/extensions are loaded
     - >-
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
       
-    # 3. Build the LaTeX source files (Output in $READTHEDOCS_OUTPUT/latex)
-    # This step generates SHAP.tex and the Makefile at this specific path.
+    # 3. Build the LaTeX source files to a well-known LOCAL directory
+    # We use a path relative to the project root, like '_latex_build',
+    # where the Makefile is reliably created alongside SHAP.tex.
+    - mkdir -p _latex_build
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
-      docs $READTHEDOCS_OUTPUT/latex
+      docs _latex_build
 
     # 4. Compile the PDF from the generated source
     
-    # FIX: Change directory directly into the location where the Makefile was created (Step 3).
-    - cd $READTHEDOCS_OUTPUT/latex
+    # FIX: Change directory directly into the LOCAL build folder.
+    - cd _latex_build
     
     # Execute the Makefile to compile SHAP.tex into SHAP.pdf.
-    # This now works because the 'make' utility is run in the same folder as the Makefile.
+    # The 'make' utility is run in the same folder as the Makefile and SHAP.tex.
     - make
 
     # 5. Move and rename the final PDF file for Read the Docs to find
+    
+    # Change back to project root
+    - cd ..
+    
+    # Move and rename the final PDF file from the local build folder
     - mkdir -p $READTHEDOCS_OUTPUT/pdf/
-    # The compiled file is named SHAP.pdf based on your conf.py setting.
-    - mv SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
+    # The compiled file is now found at: _latex_build/SHAP.pdf
+    - mv _latex_build/SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
 
 formats:
   - htmlzip
