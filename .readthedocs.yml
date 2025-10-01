@@ -25,21 +25,21 @@ build:
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
       
-    # 3. Build the LaTeX source files (Crucial: Creates SHAP.tex and the Makefile)
+    # 3. Build the LaTeX source files (Creates SHAP.tex and the Makefile)
+    # Target a build directory *inside* the project root (e.g., _build/latex)
+    # We MUST use the Sphinx command from the root folder to correctly pick up conf.py
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
-      docs $READTHEDOCS_OUTPUT/latex
+      docs _build/latex
 
     # 4. Compile the PDF from LaTeX and move it to the final destination
     
-    # FIX: Change directory to the LaTeX output folder and run 'make'
-    # The Sphinx-generated Makefile in this directory knows how to compile SHAP.tex
-    # using xelatex (as set in conf.py) and the inkscape utility.
-    - cd $READTHEDOCS_OUTPUT/latex
+    # FIX: Change directory to the locally created latex build directory.
+    - cd _build/latex
+    # Use the local Makefile to compile the PDF.
     - make
 
-    # Move and rename the final PDF file to the location expected by RTD
-    # The file is named SHAP.pdf based on your latex_documents setting.
+    # Move the final PDF file to the location expected by RTD
     - mkdir -p $READTHEDOCS_OUTPUT/pdf/
     - mv SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
 
