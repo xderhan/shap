@@ -1,12 +1,11 @@
 # .readthedocs.yml
 version: 2
 
-# Set the version of Python and other tools you might need
 build:
   os: ubuntu-22.04
   tools:
     python: "3.11"
-  # System package to handle SVG conversion for LaTeX
+  # Install Inkscape to process SVG graphics for LaTeX
   apt_packages:
     - inkscape
     
@@ -20,30 +19,31 @@ build:
     - uv pip install setuptools cython
     - .venv/bin/python setup.py build_ext --inplace
     
-    # 2. Build the HTML documentation (OK)
+    # 2. Build the HTML documentation (Output in $READTHEDOCS_OUTPUT/html)
     - >-
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
       
-    # 3. Build the LaTeX source files (Creates SHAP.tex and the Makefile)
-    # Target a build directory *inside* the project root (e.g., _build/latex)
-    # We MUST use the Sphinx command from the root folder to correctly pick up conf.py
+    # 3. Build the LaTeX source files (Output in $READTHEDOCS_OUTPUT/latex)
+    # This step generates SHAP.tex and the Makefile at this specific path.
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
-      docs _build/latex
+      docs $READTHEDOCS_OUTPUT/latex
 
-    # 4. Compile the PDF from LaTeX and move it to the final destination
+    # 4. Compile the PDF from the generated source
     
-    # FIX: Change directory to the locally created latex build directory.
-    - cd _build/latex
-    # Use the local Makefile to compile the PDF.
+    # FIX: Change directory directly into the location where the Makefile was created (Step 3).
+    - cd $READTHEDOCS_OUTPUT/latex
+    
+    # Execute the Makefile to compile SHAP.tex into SHAP.pdf.
+    # This now works because the 'make' utility is run in the same folder as the Makefile.
     - make
 
-    # Move the final PDF file to the location expected by RTD
+    # 5. Move and rename the final PDF file for Read the Docs to find
     - mkdir -p $READTHEDOCS_OUTPUT/pdf/
+    # The compiled file is named SHAP.pdf based on your conf.py setting.
     - mv SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
 
-# Specify the final output formats you want Read the Docs to make available
 formats:
   - htmlzip
   - pdf
