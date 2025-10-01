@@ -6,8 +6,7 @@ build:
   os: ubuntu-22.04
   tools:
     python: "3.11"
-  # ADDED: System package to handle SVG conversion for LaTeX
-  # This installs Inkscape, which provides the tools needed to convert SVGs to PDF
+  # System package to handle SVG conversion for LaTeX
   apt_packages:
     - inkscape
     
@@ -26,27 +25,23 @@ build:
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
       
-    # 3. Build the LaTeX source files (OK)
-    # The output is placed in $READTHEDOCS_OUTPUT/latex
+    # 3. Build the LaTeX source files (Crucial: Creates SHAP.tex and the Makefile)
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/latex
 
     # 4. Compile the PDF from LaTeX and move it to the final destination
     
-    # NEW FIX: Change directory back to the project root.
+    # FIX: Change directory to the LaTeX output folder and run 'make'
+    # The Sphinx-generated Makefile in this directory knows how to compile SHAP.tex
+    # using xelatex (as set in conf.py) and the inkscape utility.
     - cd $READTHEDOCS_OUTPUT/latex
-    - cd ../../
-    
-    # Explicitly call the sphinx command to compile PDF.
-    # Note: Sphinx handles the SVG conversion automatically if the tool (inkscape) is installed.
-    - >-
-      .venv/bin/python -m sphinx.cmd.build -M latexpdf
-      docs _readthedocs
-      
+    - make
+
     # Move and rename the final PDF file to the location expected by RTD
+    # The file is named SHAP.pdf based on your latex_documents setting.
     - mkdir -p $READTHEDOCS_OUTPUT/pdf/
-    - mv _readthedocs/latex/SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
+    - mv SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
 
 # Specify the final output formats you want Read the Docs to make available
 formats:
