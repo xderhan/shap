@@ -1,4 +1,4 @@
-# .readthedocs.yml (Corrected PDF Compilation)
+# .readthedocs.yml
 version: 2
 
 # Set the version of Python and other tools you might need
@@ -7,7 +7,7 @@ build:
   tools:
     python: "3.11"
   commands:
-    # 1. Installation commands (OK)
+    # 1. Installation commands (These were OK)
     - asdf plugin add uv
     - asdf install uv latest
     - asdf global uv latest
@@ -16,34 +16,34 @@ build:
     - uv pip install setuptools cython
     - .venv/bin/python setup.py build_ext --inplace
     
-    # 2. Build the HTML documentation (OK)
+    # 2. Build the HTML documentation (These were OK)
     - >-
       .venv/bin/python -m sphinx -T -b html -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/html
       
-    # 3. Build the LaTeX source files (OK)
+    # 3. Build the LaTeX source files (These were OK)
+    # The output is placed in $READTHEDOCS_OUTPUT/latex
     - >-
       .venv/bin/python -m sphinx -T -b latex -d docs/_build/doctrees -D language=en
       docs $READTHEDOCS_OUTPUT/latex
 
     # 4. Compile the PDF from LaTeX and move it to the final destination
     
-    # Change directory to where the LaTeX source files were placed
+    # NEW FIX: Change directory back to the project root.
+    # We must be at the root to find the 'docs' source directory and 'conf.py'.
     - cd $READTHEDOCS_OUTPUT/latex
+    - cd ../../
     
-    # NEW FIX: Explicitly call the sphinx-build command to compile the PDF.
-    # This uses the '-M latexpdf' argument, which is the command line equivalent
-    # of running 'make latexpdf', ensuring the PDF is compiled.
+    # Explicitly call the sphinx command to compile PDF.
+    # Run from the root, pointing to 'docs' as source and '_readthedocs' as a temporary build dir.
     - >-
       .venv/bin/python -m sphinx.cmd.build -M latexpdf
-      . _build
-
+      docs _readthedocs
+      
     # Move and rename the final PDF file to the location expected by RTD
-    # The expected output name is SHAP.pdf (from your latex_documents in conf.py)
-    # The final PDF must be placed in $READTHEDOCS_OUTPUT/pdf/ and named $READTHEDOCS_PROJECT.pdf
+    # The compiled file is now found at the new temporary build path: _readthedocs/latex/SHAP.pdf
     - mkdir -p $READTHEDOCS_OUTPUT/pdf/
-    # The compiled PDF will be in _build/latex/<master_doc>.pdf, which is SHAP.pdf
-    - mv _build/latex/SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
+    - mv _readthedocs/latex/SHAP.pdf $READTHEDOCS_OUTPUT/pdf/$READTHEDOCS_PROJECT.pdf
 
 # Specify the final output formats you want Read the Docs to make available
 formats:
